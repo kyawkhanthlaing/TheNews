@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TheNews</string>
+    <string name="btn_favorite">favoriteBtn</string>
+    <string name="article_cover_photo">Article Cover Photo</string>
+    <string name="published_time">published time</string>
+    <string name="title">TITLE</string>
+    <string name="top_headlines">Top Headlines</string>
+    <string name="saved_news">Saved News</string>
+    <string name="saved_icon">Save Icon\n</string>
+</resources>
