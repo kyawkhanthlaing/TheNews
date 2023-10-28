@@ -2,6 +2,8 @@ package com.kkcoding.data
 
 import android.content.Context
 import androidx.room.Room
+import com.kkcoding.data.api.ArticleApi
+import com.kkcoding.data.api.HeaderInterceptor
 import com.kkcoding.data.datasource.local.ArticleLocalDatasource
 import com.kkcoding.data.datasource.local.ArticleLocalDatasourceImpl
 import com.kkcoding.data.datasource.remote.ArticleRemoteDataSourceImpl
@@ -18,7 +20,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
