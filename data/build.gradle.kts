@@ -45,6 +45,7 @@ kapt {
 
 dependencies {
 
+    implementation(project(path=":core"))
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
@@ -55,6 +56,7 @@ dependencies {
     // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.4.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.5.0")
 
     // Room

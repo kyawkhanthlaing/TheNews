@@ -1,4 +1,4 @@
-package com.kkcoding.data.response
+package com.kkcoding.data.response.article
 
 data class ArticleItemResponse(
     val author: String?,

@@ -6,8 +6,8 @@
 
     <fragment
         android:id="@+id/newsHeadlinesFragment"
-        android:name="com.kkcoding.thenews.NewsHeadlinesFragment"
-        android:label="NewsHeadlinesFragment" >
+        android:name="com.kkcoding.thenews.ui.headline_articles.HeadlineArticlesFragment"
+        android:label="Headlines News" >
         <action
             android:id="@+id/action_newsHeadlinesFragment_to_newsDetailsFragment"
             app:destination="@id/newsDetailsFragment"
@@ -18,12 +18,16 @@
     </fragment>
     <fragment
         android:id="@+id/newsDetailsFragment"
-        android:name="com.kkcoding.thenews.NewsDetailsFragment"
-        android:label="NewsDetailsFragment" />
+        android:name="com.kkcoding.thenews.ui.detail_article.ArticleDetailsFragment"
+        android:label="News Detail" >
+        <argument
+            android:name="article"
+            app:argType="com.kkcoding.domain.model.ArticleItem" />
+    </fragment>
     <fragment
         android:id="@+id/newsSavedFragment"
-        android:name="com.kkcoding.thenews.NewsSavedFragment"
-        android:label="NewsSavedFragment" >
+        android:name="com.kkcoding.thenews.ui.saved_articles.SavedArticleFragment"
+        android:label="Saved News" >
         <action
             android:id="@+id/action_newsSavedFragment_to_newsDetailsFragment"
             app:destination="@id/newsDetailsFragment"

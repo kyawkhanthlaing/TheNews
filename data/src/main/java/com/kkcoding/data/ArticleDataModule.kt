@@ -1,17 +1,24 @@
 package com.kkcoding.data
 
-import com.kkcoding.data.datasource.ArticleRemoteDataSourceImpl
-import com.kkcoding.data.datasource.ArticleRemoteDatasource
+import android.content.Context
+import androidx.room.Room
+import com.kkcoding.data.datasource.local.ArticleLocalDatasource
+import com.kkcoding.data.datasource.local.ArticleLocalDatasourceImpl
+import com.kkcoding.data.datasource.remote.ArticleRemoteDataSourceImpl
+import com.kkcoding.data.datasource.remote.ArticleRemoteDatasource
+import com.kkcoding.data.db.NewsDB
+import com.kkcoding.data.db.dao.ArticleDAO
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -19,12 +26,18 @@ import javax.inject.Singleton
 object ArticleDataModule {
 
     @Provides
-    fun provideOkhttp(): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    fun provideApiKey():String = BuildConfig.API_KEY
+
+
+    @Provides
+    fun provideOkhttp(
+        loggingInterceptor: HttpLoggingInterceptor,
+        headerInterceptor: HeaderInterceptor
+    ): OkHttpClient {
         return OkHttpClient
             .Builder()
-            .addInterceptor(interceptor)
+            .addInterceptor(headerInterceptor)
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
@@ -32,14 +45,41 @@ object ArticleDataModule {
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder().baseUrl("https://newsapi.org/")
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create()).build()
+            .addConverterFactory(MoshiConverterFactory.create()).build()
     }
 
     @Provides
-    fun provideArticleApi(retrofit: Retrofit):ArticleApi = retrofit.create(ArticleApi::class.java)
+    fun provideArticleApi(retrofit: Retrofit): ArticleApi = retrofit.create(ArticleApi::class.java)
 
 
+    @Provides
+    fun provideInterceptor(api_key:String) = HeaderInterceptor(api_key)
 
+    @Provides
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+        setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+}
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext appContext: Context): NewsDB {
+        return Room.databaseBuilder(
+            appContext,
+            NewsDB::class.java,
+            "NewsDB"
+        ).fallbackToDestructiveMigration().build()
+    }
+
+    @Provides
+    fun provideArticleDao(appDatabase: NewsDB): ArticleDAO {
+        return appDatabase.articleDAO()
+    }
 }
 
 @Module
@@ -47,7 +87,14 @@ object ArticleDataModule {
 abstract class ArticleDataSourceModule {
     @Binds
     @Singleton
-    abstract fun bindArticleDatasource(
-        articleRepoImpl: ArticleRemoteDataSourceImpl
+    abstract fun bindArticleRemoteDatasource(
+        articleRemoteImpl: ArticleRemoteDataSourceImpl
     ): ArticleRemoteDatasource
+
+
+    @Binds
+    @Singleton
+    abstract fun bindArticleLocalDatasource(
+        articleLocalImpl: ArticleLocalDatasourceImpl
+    ): ArticleLocalDatasource
 }

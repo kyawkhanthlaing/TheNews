@@ -3,10 +3,10 @@
 
     <item android:id="@+id/newsHeadlinesFragment"
         android:title="@string/top_headlines"
-        android:icon="@drawable/ic_headlines"/>
+        android:icon="@drawable/ic_globe"/>
 
     <item android:id="@+id/newsSavedFragment"
         android:title="@string/saved_news"
-        android:icon="@drawable/ic_saved"
+        android:icon="@drawable/ic_filled_bookmark"
         />
 </menu>
